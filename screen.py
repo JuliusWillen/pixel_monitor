@@ -7,7 +7,7 @@ import time
 
 
 MAIL_SCREEN_CHANGED = (settings.TO_MAIL, "Screen changed!",
-                       ["Screen has changed. Please check your computer. Script is paused for 60 seconds!"])
+                       ["Screen has changed. Please check your computer. Script is paused for 60 seconds!", "ss.png"])
 MAIL_SESSION_STARTED = (settings.TO_MAIL, "Screen monitor session started!",
                         ["Screen is being monitored. You will receive a mail when the screen updates!"])
 MAIL_SESSION_STOPPED = (settings.TO_MAIL, "Screen monitor session stopped!",
@@ -21,8 +21,8 @@ def send_mail(yag, mail):
 
 def get_mouse_position(watchtime=60):
     start = time.time()
-    while True:
-        if ctypes.windll.user32.GetKeyState(0x01) not in [0, 1]: # 0x01 is left mouse click
+    while 1:
+        if ctypes.windll.user32.GetKeyState(0x01) not in [0, 1]:
             return pyautogui.position()
         elif time.time() - start >= watchtime:
             break
@@ -41,8 +41,9 @@ def monitor_pixel(pos, yag):
             time.sleep(3)  # wait for 3 seconds
             if new_color != color:
                 print("Color mismatch: ", new_color, color)
+                pyautogui.screenshot('ss.png')
                 send_mail(yag, MAIL_SCREEN_CHANGED)
-                time.sleep(60) # wait for a minute
+                time.sleep(60)
     except:
         print("Something went wrong")
         send_mail(yag, MAIL_SESSION_STOPPED)
