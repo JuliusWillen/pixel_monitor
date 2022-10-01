@@ -21,7 +21,8 @@ def send_mail(yag, mail):
 
 def get_mouse_position(watchtime=60):
     start = time.time()
-    while 1:
+    while True:
+        # 0x01 is left mouse button
         if ctypes.windll.user32.GetKeyState(0x01) not in [0, 1]:
             return pyautogui.position()
         elif time.time() - start >= watchtime:
@@ -43,7 +44,7 @@ def monitor_pixel(pos, yag):
                 print("Color mismatch: ", new_color, color)
                 pyautogui.screenshot('ss.png')
                 send_mail(yag, MAIL_SCREEN_CHANGED)
-                time.sleep(60)
+                time.sleep(60)  # wait 60 seconds
     except:
         print("Something went wrong")
         send_mail(yag, MAIL_SESSION_STOPPED)
