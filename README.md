@@ -1,5 +1,6 @@
 # pixel_monitor
-Monitors a pixel on your screen and sends an e-mail when the pixel has changed color.
+Monitors a pixel on your screen and sends an e-mail when the pixel has changed color. 
+Currently only supporting Windows.
 
 # dependencies
 [yagmail](https://pypi.org/project/yagmail/)
