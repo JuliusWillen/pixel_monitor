@@ -21,7 +21,7 @@ def send_mail(yag, mail):
 
 def get_mouse_position(watchtime=60):
     start = time.time()
-    while 1:
+    while True:
         if ctypes.windll.user32.GetKeyState(0x01) not in [0, 1]:
             return pyautogui.position()
         elif time.time() - start >= watchtime:
