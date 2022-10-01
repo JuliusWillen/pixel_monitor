@@ -11,7 +11,7 @@ Currently only supporting Windows.
 1. install python 3.9
 2. install the dependencies
 3. make sure your gmail account is set to allow application logins [following this guide](https://support.google.com/accounts/answer/185833)  
-4. create a file "settings.py" in the root folder
+4. update "settings.py" in the root folder
 5. set USERNAME=[your gmail address you want to send mails from]
 6. set PASSWORD=[your gmail password you created in step 3]
 7. set TO_MAIL=[your desired target e-mail address, can be the same as your USERNAME]
