@@ -66,8 +66,7 @@ if __name__ == '__main__':
             print("Got position from argument: ", pos)
         except:
             print("Invalid arguments.")
-            pos = get_mouse_position()
-    else:
+    if not pos:
         pos = get_mouse_position()
     yag = yagmail.SMTP(os.getenv("GMAIL_USERNAME"),
                        os.getenv("GMAIL_APP_PASSWORD"))
