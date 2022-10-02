@@ -4,6 +4,7 @@ import pyautogui
 import yagmail
 import settings
 import time
+import sys
 
 
 MAIL_SCREEN_CHANGED = (settings.TO_MAIL, "Screen changed!",
@@ -50,7 +51,14 @@ def monitor_pixel(pos, yag):
         send_mail(yag, MAIL_SESSION_STOPPED)
 
 
-yag = yagmail.SMTP(settings.USERNAME, settings.PASSWORD)
-pos = get_mouse_position()
-send_mail(yag, MAIL_SESSION_STARTED)
-monitor_pixel(pos, yag)
+if __name__ == '__main__':
+    input("Press ENTER to start the script...\n")
+    pos = None
+    if len(sys.argv) > 1:
+        pos = pyautogui.Point(int(sys.argv[1]), int(sys.argv[2]))
+        print("Got position from argument: ", pos)
+    else:
+        pos = get_mouse_position()
+    yag = yagmail.SMTP(settings.USERNAME, settings.PASSWORD)
+    send_mail(yag, MAIL_SESSION_STARTED)
+    monitor_pixel(pos, yag)
