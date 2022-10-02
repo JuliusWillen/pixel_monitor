@@ -17,6 +17,5 @@ Currently only supporting Windows.
 2. install the dependencies
 3. make sure your gmail account is set to allow application logins [following this guide](https://support.google.com/accounts/answer/185833)
 4. create file `.env` in the root folder based on `.env.example`
-5. run screen.py
-6. select a pixel on your screen
-7. enjoy
+5. run `pixel_monitor.py`
+6. follow the instructions in the application
