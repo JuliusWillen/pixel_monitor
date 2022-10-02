@@ -45,12 +45,13 @@ def monitor_pixel(pos, yag):
         while True:
             new_color = pyautogui.pixel(pos.x, pos.y)
             print("Color on chosen position:", new_color)
-            time.sleep(3)  # wait for 3 seconds
             if new_color != color:
                 print("Color mismatch: ", new_color, color)
                 pyautogui.screenshot('ss.png')
                 send_mail(yag, MAIL_SCREEN_CHANGED)
                 time.sleep(60)  # wait 60 seconds
+            else:
+                time.sleep(3)  # wait for 3 seconds
     except:
         print("Something went wrong")
         send_mail(yag, MAIL_SESSION_STOPPED)
