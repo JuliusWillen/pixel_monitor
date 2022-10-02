@@ -54,7 +54,7 @@ def monitor_pixel(pos, yag):
 if __name__ == '__main__':
     input("Press ENTER to start the script...\n")
     pos = None
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         pos = pyautogui.Point(int(sys.argv[1]), int(sys.argv[2]))
         print("Got position from argument: ", pos)
     else:
