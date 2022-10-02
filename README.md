@@ -9,6 +9,8 @@ Currently only supporting Windows.
 
 [pyautogui](https://pyautogui.readthedocs.io/en/latest)
 
+[dotenv](https://pypi.org/project/python-dotenv/)
+
 # setup
 
 1. install python 3.9
