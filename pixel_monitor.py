@@ -1,77 +1,63 @@
 import ctypes
 import time
 import pyautogui
-import yagmail
-import dotenv
 import time
 import sys
 import os
 import random
 
-dotenv.load_dotenv()
-# show the environment
-print("Environment:")
-print("GMAIL_USERNAME:", os.getenv("GMAIL_USERNAME"))
-print("GMAIL_APP_PASSWORD:", os.getenv("GMAIL_APP_PASSWORD"))
-print("TO_MAIL:", os.getenv("TO_MAIL"))
-
-MAIL_SCREEN_CHANGED = (os.getenv("TO_MAIL"), "Screen changed!",
-                       ["Screen has changed. Please check your computer. Script is paused for 60 seconds!", "ss.png"])
-MAIL_SESSION_RESTARTED = (os.getenv("TO_MAIL"), "Screen monitor session restarted!",
-                          ["Script has been restarted!", "ss.png"])
-MAIL_SESSION_STARTED = (os.getenv("TO_MAIL"), "Screen monitor session started!",
-                        ["Screen is being monitored. You will receive a mail when the screen updates!"])
-MAIL_SESSION_STOPPED = (os.getenv("TO_MAIL"), "Screen monitor session stopped!",
-                        ["Something went wrong."])
+from notify import Notify
 
 
-def send_mail(yag, mail):
-    print("Sending mail:", mail)
-    yag.send(mail[0], mail[1], mail[2])
+class PixelMonitor:
+    def __init__(self):
+        self.n = Notify()
 
+    def notify(self, message):
+        self.n.notify(message)
 
-def get_mouse_position():
-    print("Choose position on screen to monitor")
-    while True:
-        # 0x01 is left mouse button
-        if ctypes.windll.user32.GetKeyState(0x01) not in [0, 1]:
-            pos = pyautogui.position()
-            print("Chosen position:", pos)
-            return pos
-
-
-def get_random_seconds():
-    return random.randint(1, 60)
-
-
-def monitor_pixel(pos, yag, press_enter=False):
-    # get color of position
-    color = pyautogui.pixel(pos.x, pos.y)
-    print("Got color of chosen position: ", pos, color)
-    try:
+    def get_mouse_position(self):
+        print("Choose position on screen to monitor")
         while True:
-            new_color = pyautogui.pixel(pos.x, pos.y)
-            if new_color != color:
-                print("Color mismatch: ", new_color, color)
-                # print the current time
-                print(time.ctime())
-                pyautogui.screenshot('ss.png')
-                send_mail(yag, MAIL_SCREEN_CHANGED)
-                seconds = get_random_seconds()
-                if press_enter:
-                    print("Pressing enter after " + str(seconds) + " seconds")
-                    time.sleep(seconds)
-                    pyautogui.press("enter")
-                print("Waiting 20 seconds before restarting script")
-                time.sleep(20)
-                print("Script restarted")
-                pyautogui.screenshot('ss.png')
-                send_mail(yag, MAIL_SESSION_RESTARTED)
-            else:
-                time.sleep(3)
-    except:
-        print("Something went wrong")
-        send_mail(yag, MAIL_SESSION_STOPPED)
+            # 0x01 is left mouse button
+            if ctypes.windll.user32.GetKeyState(0x01) not in [0, 1]:
+                pos = pyautogui.position()
+                print("Chosen position:", pos)
+                return pos
+
+    def get_random_seconds(self):
+        return random.randint(1, 60)
+
+    def monitor_pixel(self, pos, press_enter=False):
+        self.notify("SESSION_STARTED")
+        # get color of position
+        color = pyautogui.pixel(pos.x, pos.y)
+        print("Got color of chosen position: ", pos, color)
+        try:
+            while True:
+                new_color = pyautogui.pixel(pos.x, pos.y)
+                if new_color != color:
+                    print("Color mismatch: ", new_color, color)
+                    # print the current time
+                    print(time.ctime())
+                    pyautogui.screenshot('ss.png')
+                    self.notify("SCREEN_CHANGED")
+                    seconds = self.get_random_seconds()
+                    if press_enter:
+                        print("Pressing enter after " +
+                              str(seconds) + " seconds")
+                        time.sleep(seconds)
+                        pyautogui.press("enter")
+                    print("Waiting 20 seconds before restarting script")
+                    time.sleep(20)
+                    print("Script restarted")
+                    pyautogui.screenshot('ss.png')
+                    self.notify("SESSION_RESTARTED")
+                else:
+                    time.sleep(3)
+        except:
+            print("Something went wrong")
+            self.notify("SESSION_STOPPED")
 
 
 if __name__ == '__main__':
@@ -92,11 +78,9 @@ if __name__ == '__main__':
         except:
             print("Invalid arguments.")
 
+    pixel_monitor = PixelMonitor()
     if not pos:
-        pos = get_mouse_position()
-    yag = yagmail.SMTP(os.getenv("GMAIL_USERNAME"),
-                       os.getenv("GMAIL_APP_PASSWORD"))
-    send_mail(yag, MAIL_SESSION_STARTED)
+        pos = pixel_monitor.get_mouse_position()
     # print the current time
     print(time.ctime())
-    monitor_pixel(pos, yag, press_enter)
+    pixel_monitor.monitor_pixel(pos, press_enter)
