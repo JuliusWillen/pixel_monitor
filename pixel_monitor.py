@@ -6,6 +6,7 @@ import dotenv
 import time
 import sys
 import os
+import random
 
 dotenv.load_dotenv()
 # show the environment
@@ -16,6 +17,8 @@ print("TO_MAIL:", os.getenv("TO_MAIL"))
 
 MAIL_SCREEN_CHANGED = (os.getenv("TO_MAIL"), "Screen changed!",
                        ["Screen has changed. Please check your computer. Script is paused for 60 seconds!", "ss.png"])
+MAIL_SESSION_RESTARTED = (os.getenv("TO_MAIL"), "Screen monitor session restarted!",
+                          ["Script has been restarted!", "ss.png"])
 MAIL_SESSION_STARTED = (os.getenv("TO_MAIL"), "Screen monitor session started!",
                         ["Screen is being monitored. You will receive a mail when the screen updates!"])
 MAIL_SESSION_STOPPED = (os.getenv("TO_MAIL"), "Screen monitor session stopped!",
@@ -37,21 +40,35 @@ def get_mouse_position():
             return pos
 
 
-def monitor_pixel(pos, yag):
+def get_random_seconds():
+    return random.randint(1, 60)
+
+
+def monitor_pixel(pos, yag, press_enter=False):
     # get color of position
     color = pyautogui.pixel(pos.x, pos.y)
     print("Got color of chosen position: ", pos, color)
     try:
         while True:
             new_color = pyautogui.pixel(pos.x, pos.y)
-            print("Color on chosen position:", new_color)
             if new_color != color:
                 print("Color mismatch: ", new_color, color)
+                # print the current time
+                print(time.ctime())
                 pyautogui.screenshot('ss.png')
                 send_mail(yag, MAIL_SCREEN_CHANGED)
-                time.sleep(60)  # wait 60 seconds
+                seconds = get_random_seconds()
+                if press_enter:
+                    print("Pressing enter after " + str(seconds) + " seconds")
+                    time.sleep(seconds)
+                    pyautogui.press("enter")
+                print("Waiting 20 seconds before restarting script")
+                time.sleep(20)
+                print("Script restarted")
+                pyautogui.screenshot('ss.png')
+                send_mail(yag, MAIL_SESSION_RESTARTED)
             else:
-                time.sleep(3)  # wait for 3 seconds
+                time.sleep(3)
     except:
         print("Something went wrong")
         send_mail(yag, MAIL_SESSION_STOPPED)
@@ -60,15 +77,26 @@ def monitor_pixel(pos, yag):
 if __name__ == '__main__':
     input("Press ENTER to start the script...\n")
     pos = None
+    press_enter = False
     if len(sys.argv) > 2:
         try:
             pos = pyautogui.Point(int(sys.argv[1]), int(sys.argv[2]))
             print("Got position from argument: ", pos)
         except:
             print("Invalid arguments.")
+    if len(sys.argv) > 3:
+        try:
+            if sys.argv[3] == "True":
+                print("Pressing enter after screen change")
+                press_enter = True
+        except:
+            print("Invalid arguments.")
+
     if not pos:
         pos = get_mouse_position()
     yag = yagmail.SMTP(os.getenv("GMAIL_USERNAME"),
                        os.getenv("GMAIL_APP_PASSWORD"))
     send_mail(yag, MAIL_SESSION_STARTED)
-    monitor_pixel(pos, yag)
+    # print the current time
+    print(time.ctime())
+    monitor_pixel(pos, yag, press_enter)
