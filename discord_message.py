@@ -16,9 +16,7 @@ class DiscordMessage:
 
     def send(self, message):
         try:
-            print("Sending message to discord", message)
             msg = self.messages[message]
-            print("Got this message: ", msg)
             self.webhook.send(self.id + ": " + msg)
         except:
             print("DiscordMessage: something went wrong")
