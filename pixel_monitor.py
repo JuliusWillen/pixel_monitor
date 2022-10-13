@@ -3,10 +3,9 @@ import time
 import pyautogui
 import time
 import sys
-import os
 import random
 
-from notify import Notify
+from notify import Notify, Message
 
 
 class PixelMonitor:
@@ -29,7 +28,7 @@ class PixelMonitor:
         return random.randint(1, 60)
 
     def monitor_pixel(self, pos, press_enter=False):
-        self.notify("SESSION_STARTED")
+        self.notify(Message.SESSION_STARTED)
         # get color of position
         color = pyautogui.pixel(pos.x, pos.y)
         print("Got color of chosen position: ", pos, color)
@@ -41,7 +40,7 @@ class PixelMonitor:
                     # print the current time
                     print(time.ctime())
                     pyautogui.screenshot('ss.png')
-                    self.notify("SCREEN_CHANGED")
+                    self.notify(Message.SCREEN_CHANGED)
                     seconds = self.get_random_seconds()
                     if press_enter:
                         print("Pressing enter after " +
@@ -52,12 +51,12 @@ class PixelMonitor:
                     time.sleep(20)
                     print("Script restarted")
                     pyautogui.screenshot('ss.png')
-                    self.notify("SESSION_RESTARTED")
+                    self.notify(Message.SESSION_RESTARTED)
                 else:
                     time.sleep(3)
         except:
             print("Something went wrong")
-            self.notify("SESSION_STOPPED")
+            self.notify(Message.SESSION_STOPPED)
 
 
 if __name__ == '__main__':
