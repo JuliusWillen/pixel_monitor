@@ -11,6 +11,8 @@ Currently only supporting Windows.
 
 [dotenv](https://pypi.org/project/python-dotenv/)
 
+[discord](https://discordpy.readthedocs.io/en/stable/)
+
 # prerequisites
 
 1. a google account
