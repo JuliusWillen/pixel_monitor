@@ -5,7 +5,8 @@ import time
 import sys
 import random
 
-from notify import Notify, Message
+from notify import Notify
+from message import Message
 
 
 class PixelMonitor:

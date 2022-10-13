@@ -2,7 +2,7 @@
 import dotenv
 import os
 import yagmail
-from notify import Message
+from message import Message
 
 
 class GmailMessage:

@@ -7,13 +7,6 @@ from gmail_message import GmailMessage
 from distutils.util import strtobool
 
 
-class Message(enum):
-    SCREEN_CHANGED = "SCREEN_CHANGED"
-    SESSION_RESTARTED = "SESSION_RESTARTED"
-    SESSION_STARTED = "SESSION_STARTED"
-    SESSION_STOPPED = "SESSION_STOPPED"
-
-
 class Notify:
     def __init__(self):
         dotenv.load_dotenv()

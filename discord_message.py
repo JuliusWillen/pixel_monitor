@@ -1,7 +1,7 @@
 from discord import SyncWebhook
 import dotenv
 import os
-from notify import Message
+from message import Message
 
 
 class DiscordMessage:
