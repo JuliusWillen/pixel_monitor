@@ -64,19 +64,10 @@ if __name__ == '__main__':
     input("Press ENTER to start the script...\n")
     pos = None
     press_enter = False
-    if len(sys.argv) > 2:
-        try:
-            pos = pyautogui.Point(int(sys.argv[1]), int(sys.argv[2]))
-            print("Got position from argument: ", pos)
-        except:
-            print("Invalid arguments.")
-    if len(sys.argv) > 3:
-        try:
-            if sys.argv[3] == "True":
-                print("Pressing enter after screen change")
-                press_enter = True
-        except:
-            print("Invalid arguments.")
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "enter":
+            print("Pressing enter after screen change")
+            press_enter = True
 
     pixel_monitor = PixelMonitor()
     if not pos:
